@@ -4,6 +4,7 @@ import com.udemy.broker.assets.AssetsRestApi;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,19 @@ public class MainVerticle extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     final Router restApi = Router.router(vertx);
+
+    restApi.route().failureHandler(errorContext -> {
+      if (errorContext.response().ended()) {
+        // Ignore completed response
+        return;
+      }
+
+      LOG.error("Route Error:", errorContext.failure());
+      errorContext.response()
+        .setStatusCode(500)
+        .end(new JsonObject().put("message", "Something went wrong :(").toBuffer());
+    });
+
     AssetsRestApi.attach(restApi);
 
     vertx.createHttpServer()

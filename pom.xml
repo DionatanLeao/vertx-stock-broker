@@ -21,6 +21,7 @@
 
     <main.verticle>com.udemy.broker.MainVerticle</main.verticle>
     <launcher.class>io.vertx.core.Launcher</launcher.class>
+    <jackson-databind.version>2.11.3</jackson-databind.version>
   </properties>
 
   <dependencyManagement>
@@ -39,6 +40,11 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson-databind.version}</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
