@@ -11,10 +11,10 @@ public class AssetsRestApi {
   public static void attach(Router parent) {
     parent.get("/assets").handler(context -> {
       final JsonArray response = new JsonArray();
-      response.add(new JsonObject().put("symbol", "AAPL"));
-      response.add(new JsonObject().put("symbol", "AMZN"));
-      response.add(new JsonObject().put("symbol", "NFLX"));
-      response.add(new JsonObject().put("symbol", "TSLA"));
+      response.add(new Asset("AAPL"));
+      response.add(new Asset("AMZN"));
+      response.add(new Asset("NFLX"));
+      response.add(new Asset("TSLA"));
       LOG.info("Path {} responds with {}", context.normalizedPath(), response.encode());
       context.response().end(response.toBuffer());
     });
