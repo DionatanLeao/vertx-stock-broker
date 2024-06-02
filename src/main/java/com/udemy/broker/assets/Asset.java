@@ -1,12 +1,8 @@
 package com.udemy.broker.assets;
 
-public class Asset {
-  private final String name;
-  public Asset(final String name) {
-    this.name = name;
-  }
+import lombok.Value;
 
-  public String getName() {
-    return name;
-  }
+@Value
+public class Asset {
+  String name;
 }
