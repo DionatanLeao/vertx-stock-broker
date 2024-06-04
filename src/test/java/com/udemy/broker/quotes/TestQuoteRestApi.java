@@ -1,8 +1,9 @@
-package com.udemy.broker.assets;
+package com.udemy.broker.quotes;
 
 import com.udemy.broker.MainVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.junit5.VertxExtension;
@@ -16,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(VertxExtension.class)
-public class TestAssetsRestApi {
-  private static final Logger LOG = LoggerFactory.getLogger(TestAssetsRestApi.class);
+public class TestQuoteRestApi {
+  private static final Logger LOG = LoggerFactory.getLogger(TestQuoteRestApi.class);
 
   @BeforeEach
   void deploy_verticle(Vertx vertx, VertxTestContext testContext) {
@@ -25,14 +26,14 @@ public class TestAssetsRestApi {
   }
 
   @Test
-  void verticle_deployed(Vertx vertx, VertxTestContext testContext) throws Throwable {
+  void returns_quote_for_asset(Vertx vertx, VertxTestContext testContext) throws Throwable {
     WebClient client = WebClient.create(vertx, new WebClientOptions().setDefaultPort(MainVerticle.PORT));
-    client.get("/assets")
+    client.get("/quotes/AMZN")
       .send()
       .onComplete(testContext.succeeding(response -> {
-        JsonArray json = response.bodyAsJsonArray();
+        JsonObject json = response.bodyAsJsonObject();
         LOG.info("Response: {}", json);
-        assertEquals("[{\"name\":\"AAPL\"},{\"name\":\"AMZN\"},{\"name\":\"FB\"},{\"name\":\"GOOG\"},{\"name\":\"MSFT\"},{\"name\":\"NFLX\"},{\"name\":\"TSLA\"}]", json.encode());
+        assertEquals("{\"name\":\"AMZN\"}", json.getJsonObject("asset").encode());
         assertEquals(200, response.statusCode());
         testContext.completeNow();
       }));
