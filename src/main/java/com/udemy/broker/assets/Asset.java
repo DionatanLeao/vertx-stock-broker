@@ -1,8 +1,12 @@
 package com.udemy.broker.assets;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Asset {
   String name;
 }
