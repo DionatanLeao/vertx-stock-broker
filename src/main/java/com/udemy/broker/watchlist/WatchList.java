@@ -2,11 +2,14 @@ package com.udemy.broker.watchlist;
 
 import com.udemy.broker.assets.Asset;
 import io.vertx.core.json.JsonObject;
-import lombok.Value;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class WatchList {
   private List<Asset> assets;
 

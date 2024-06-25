@@ -2,6 +2,7 @@ package com.udemy.broker.watchlist;
 
 import com.udemy.broker.MainVerticle;
 import com.udemy.broker.assets.Asset;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
@@ -31,16 +32,27 @@ public class TestWatchListRestApi {
   @Test
   void adds_and_returns_watchlist_for_account(Vertx vertx, VertxTestContext testContext) throws Throwable {
     WebClient client = WebClient.create(vertx, new WebClientOptions().setDefaultPort(MainVerticle.PORT));
-    var accountId = UUID.randomUUID();
-    client.get("/account/watchlist" + accountId)
+    var accountId = UUID.randomUUID().toString();
+    client.put("/account/watchlist/" + accountId)
       .sendJsonObject(body())
       .onComplete(testContext.succeeding(response -> {
-        JsonObject json = response.bodyAsJsonObject();
-        LOG.info("Response: {}", json);
-        assertEquals("", json.encode());
+        var json = response.bodyAsJsonObject();
+        LOG.info("Response PUT: {}", json);
+        assertEquals("{\"assets\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", json.encode());
         assertEquals(200, response.statusCode());
-        testContext.completeNow();
-      }));
+      }))
+      .compose(next -> {
+        client.get("/account/watchlist/" + accountId)
+          .send()
+          .onComplete(testContext.succeeding(response -> {
+            var json = response.bodyAsJsonObject();
+            LOG.info("Response GET: {}", json);
+            assertEquals("{\"assets\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", json.encode());
+            assertEquals(200, response.statusCode());
+            testContext.completeNow();
+          }));
+        return Future.succeededFuture();
+      });
   }
 
   private static JsonObject body() {
