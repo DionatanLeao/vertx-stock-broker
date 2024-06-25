@@ -37,7 +37,7 @@ public class WatchListRestApi {
         String accountId = context.pathParam("accountId");
         LOG.debug("{} for account {}", context.normalizedPath(), accountId);
         var json = context.getBodyAsJson();
-        WatchList watchList = json.mapTo(WatchList.class);
+        var watchList = json.mapTo(WatchList.class);
         watchListPerAccount.put(UUID.fromString(accountId), watchList);
         context.response().end(json.toBuffer());
       });
