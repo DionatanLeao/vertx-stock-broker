@@ -2,6 +2,7 @@ package com.udemy.broker;
 
 import com.udemy.broker.assets.AssetsRestApi;
 import com.udemy.broker.quotes.QuotesRestApi;
+import com.udemy.broker.watchlist.WatchListRestApi;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -45,8 +46,8 @@ public class MainVerticle extends AbstractVerticle {
     });
 
     AssetsRestApi.attach(restApi);
-
     QuotesRestApi.attach(restApi);
+    WatchListRestApi.attach(restApi);
 
     vertx.createHttpServer()
       .requestHandler(restApi)
