@@ -15,34 +15,13 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QuotesRestApi {
-  private static final Logger LOG = LoggerFactory.getLogger(QuotesRestApi.class);
 
   public static void attach(Router parent) {
     final Map<String, Quote> cachedQuotes = new HashMap<>();
     AssetsRestApi.ASSETS.forEach(symbol ->
       cachedQuotes.put(symbol, initRandomQuote(symbol))
     );
-
-    parent.get("/quotes/:asset").handler(context -> {
-      final String assetParam = context.pathParam("asset");
-      LOG.debug("Asset parameter: {}", assetParam);
-
-      var maybeQuotes = Optional.ofNullable(cachedQuotes.get(assetParam));
-      if(maybeQuotes.isEmpty()) {
-        context.response()
-          .setStatusCode(HttpResponseStatus.NOT_FOUND.code())
-          .end(new JsonObject()
-            .put("message", "quote for asset " + assetParam + " not available!")
-            .put("path", context.normalizedPath())
-            .toBuffer()
-          );
-        return;
-      }
-
-      final JsonObject response = maybeQuotes.get().toJsonObject();
-      LOG.info("Path {} responds with {}", context.normalizedPath(), response.encode());
-      context.response().end(response.toBuffer());
-    });
+    parent.get("/quotes/:asset").handler(new GetQuoteHandler(cachedQuotes));
   }
 
   private static Quote initRandomQuote(String assetParam) {
