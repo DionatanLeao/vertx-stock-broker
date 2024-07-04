@@ -47,7 +47,7 @@ public class TestQuoteRestApi {
       .onComplete(testContext.succeeding(response -> {
         JsonObject json = response.bodyAsJsonObject();
         LOG.info("Response: {}", json);
-        assertEquals("{\"message\":\"quote for asset UNKNOWNnot available!\",\"path\":\"/quotes/UNKNOWN\"}", json.encode());
+        assertEquals("{\"message\":\"quote for asset UNKNOWN not available!\",\"path\":\"/quotes/UNKNOWN\"}", json.encode());
         assertEquals(404, response.statusCode());
         testContext.completeNow();
       }));
