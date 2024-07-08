@@ -1,7 +1,6 @@
 package com.udemy.broker.assets;
 
-import com.udemy.broker.MainVerticle;
-import com.udemy.broker.config.ConfigLoader;
+import com.udemy.broker.AbstractRestApiTest;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
@@ -10,26 +9,21 @@ import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(VertxExtension.class)
-public class TestAssetsRestApi {
+public class TestAssetsRestApi extends AbstractRestApiTest {
   private static final Logger LOG = LoggerFactory.getLogger(TestAssetsRestApi.class);
-
-  @BeforeEach
-  void deploy_verticle(Vertx vertx, VertxTestContext testContext) {
-    System.setProperty(ConfigLoader.SERVER_PORT, "9000");
-    vertx.deployVerticle(new MainVerticle(), testContext.succeeding(id -> testContext.completeNow()));
-  }
 
   @Test
   void return_all_assets(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    WebClient client = WebClient.create(vertx, new WebClientOptions().setDefaultPort(MainVerticle.PORT));
+    var client = WebClient.create(vertx, new WebClientOptions()
+      .setDefaultPort(TEST_SERVER_PORT));
     client.get("/assets")
       .send()
       .onComplete(testContext.succeeding(response -> {
