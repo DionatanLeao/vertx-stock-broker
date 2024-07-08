@@ -1,6 +1,7 @@
 package com.udemy.broker.assets;
 
 import com.udemy.broker.MainVerticle;
+import com.udemy.broker.config.ConfigLoader;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpHeaders;
@@ -22,6 +23,7 @@ public class TestAssetsRestApi {
 
   @BeforeEach
   void deploy_verticle(Vertx vertx, VertxTestContext testContext) {
+    System.setProperty(ConfigLoader.SERVER_PORT, "9000");
     vertx.deployVerticle(new MainVerticle(), testContext.succeeding(id -> testContext.completeNow()));
   }
 
