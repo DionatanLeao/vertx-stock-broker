@@ -6,8 +6,10 @@
     </encoder>
   </appender>
 
+  <logger name="com.udemy.broker" level="debug"/>
   <logger name="io.netty" level="warn"/>
   <logger name="io.vertx" level="info"/>
+  <logger name="org.flywaydb.core" level="info"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
