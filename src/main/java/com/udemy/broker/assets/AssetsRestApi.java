@@ -11,5 +11,6 @@ public class AssetsRestApi {
 
   public static void attach(Router parent, PgPool db) {
     parent.get("/assets").handler(new GetAssetsHandler());
+    parent.get("/pg/assets").handler(new GetAssetsFromDatabaseHandler(db));
   }
 }
