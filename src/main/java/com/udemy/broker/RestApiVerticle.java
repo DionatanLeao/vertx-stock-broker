@@ -16,6 +16,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
 import io.vertx.pgclient.impl.PgPoolOptions;
+import io.vertx.sqlclient.Pool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class RestApiVerticle extends AbstractVerticle {
     final BrokerConfig configuration) {
 
     // One pool for each Rest Api Verticle
-    final PgPool db = createDbPool(configuration);
+    final Pool db = createDbPool(configuration);
 
     final Router restApi = Router.router(vertx);
 
@@ -45,7 +46,7 @@ public class RestApiVerticle extends AbstractVerticle {
       .failureHandler(handlerFailure());
 
     AssetsRestApi.attach(restApi, db);
-    QuotesRestApi.attach(restApi);
+    QuotesRestApi.attach(restApi, db);
     WatchListRestApi.attach(restApi);
 
     vertx.createHttpServer()
