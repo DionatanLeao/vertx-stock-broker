@@ -54,6 +54,15 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-config-yaml</artifactId>
     </dependency>
+    <!-- Reactive postgres client -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-pg-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-sql-client-templates</artifactId>
+    </dependency>
     <!-- Database Migration -->
     <dependency>
       <groupId>org.flywaydb</groupId>

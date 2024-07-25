@@ -1,6 +1,7 @@
 package com.udemy.broker.quotes;
 
 import com.udemy.broker.assets.GetAssetsHandler;
+import com.udemy.broker.db.DbResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
@@ -26,13 +27,7 @@ public class GetQuoteHandler implements Handler<RoutingContext> {
 
     var maybeQuotes = Optional.ofNullable(cachedQuotes.get(assetParam));
     if(maybeQuotes.isEmpty()) {
-      context.response()
-        .setStatusCode(HttpResponseStatus.NOT_FOUND.code())
-        .end(new JsonObject()
-          .put("message", "quote for asset " + assetParam + " not available!")
-          .put("path", context.normalizedPath())
-          .toBuffer()
-        );
+      DbResponse.notFound(context, "quote for asset " + assetParam + " not available!");
       return;
     }
 
