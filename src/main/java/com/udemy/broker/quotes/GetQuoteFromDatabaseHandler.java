@@ -1,6 +1,6 @@
 package com.udemy.broker.quotes;
 
-import com.udemy.broker.db.DbResponse;
+import com.udemy.broker.db.migration.DbResponse;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpHeaders;
