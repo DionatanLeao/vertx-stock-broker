@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PutWatchListFromDatabaseHandler implements Handler<RoutingContext> {
   private static final Logger LOG = LoggerFactory.getLogger(PutWatchListFromDatabaseHandler.class);
@@ -26,21 +29,25 @@ public class PutWatchListFromDatabaseHandler implements Handler<RoutingContext> 
     JsonObject json = context.getBodyAsJson();
     WatchList watchList = json.mapTo(WatchList.class);
 
-    watchList.getAssets().forEach(asset -> {
-      HashMap<String, Object> parameters = new HashMap<>();
+    List<Map<String, Object>> parameterBatch = watchList.getAssets().stream().map(asset -> {
+      Map<String, Object> parameters = new HashMap<>();
       parameters.put("account_id", accountId);
       parameters.put("asset", asset.getName());
+      return parameters;
+    }).collect(Collectors.toList());
 
-      SqlTemplate.forUpdate(db,
-        "INSERT INTO broker.watchlist VALUES (#{account_id},#{asset})")
-        .execute(parameters)
-        .onFailure(DbResponse.errorHandler(context, "Failed to insert into watchlist"))
-        .onSuccess(result -> {
-          if (!context.response().ended()) {
-            context.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code())
-              .end();
-          }
-        });
-    });
+    // Only adding is possible -> Entries for watch list are never removed
+    SqlTemplate.forUpdate(db,
+      "INSERT INTO broker.watchlist VALUES (#{account_id},#{asset})" +
+        " ON CONFLICT (account_id, asset) DO NOTHING")
+      .executeBatch(parameterBatch)
+      .onFailure(DbResponse.errorHandler(context, "Failed to insert into watchlist"))
+      .onSuccess(result -> {
+        if (!context.response().ended()) {
+          context.response()
+            .setStatusCode(HttpResponseStatus.NO_CONTENT.code())
+            .end();
+        }
+      });
   }
 }
