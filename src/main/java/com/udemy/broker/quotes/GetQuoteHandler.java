@@ -1,8 +1,6 @@
 package com.udemy.broker.quotes;
 
-import com.udemy.broker.assets.GetAssetsHandler;
 import com.udemy.broker.db.DbResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
