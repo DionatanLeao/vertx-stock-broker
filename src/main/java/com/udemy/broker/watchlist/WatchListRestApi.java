@@ -22,6 +22,7 @@ public class WatchListRestApi {
     final String pgPath = "/pg/account/watchlist/:accountId";
     parent.get(pgPath).handler(new GetWatchListFromDatabaseHandler(db));
     parent.put(pgPath).handler(new PutWatchListFromDatabaseHandler(db));
+    parent.delete(pgPath).handler(new DeleteWatchListFromDatabaseHandler(db));
   }
 
   static String getAccountId(RoutingContext context) {
