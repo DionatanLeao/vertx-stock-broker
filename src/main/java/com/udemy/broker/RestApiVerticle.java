@@ -4,6 +4,7 @@ package com.udemy.broker;
 import com.udemy.broker.assets.AssetsRestApi;
 import com.udemy.broker.config.BrokerConfig;
 import com.udemy.broker.config.ConfigLoader;
+import com.udemy.broker.db.DBPools;
 import com.udemy.broker.quotes.QuotesRestApi;
 import com.udemy.broker.watchlist.WatchListRestApi;
 import io.vertx.core.AbstractVerticle;
@@ -35,9 +36,9 @@ public class RestApiVerticle extends AbstractVerticle {
 
   private void startHttpServerAndAttachRoutes(final Promise<Void> startPromise,
     final BrokerConfig configuration) {
-
-    // One pool for each Rest Api Verticle
-    final Pool db = createDbPool(configuration);
+//    One pool for each Rest Api Verticle
+//    final Pool db = DBPools.createPgPool(configuration, vertx);
+    final Pool db = DBPools.createMySQLPool(configuration, vertx);
 
     final Router restApi = Router.router(vertx);
 
@@ -60,20 +61,6 @@ public class RestApiVerticle extends AbstractVerticle {
           startPromise.fail(http.cause());
         }
       });
-  }
-
-  private PgPool createDbPool(BrokerConfig configuration) {
-    final var connectOptions = new PgConnectOptions()
-      .setHost(configuration.getDbConfig().getHost())
-      .setPort(configuration.getDbConfig().getPort())
-      .setDatabase(configuration.getDbConfig().getDatabase())
-      .setUser(configuration.getDbConfig().getUser())
-      .setPassword(configuration.getDbConfig().getPassword());
-
-    var pgPoolOptions = new PgPoolOptions()
-      .setMaxSize(4);
-
-    return PgPool.pool(vertx, connectOptions, pgPoolOptions);
   }
 
   private static Handler<RoutingContext> handlerFailure() {
