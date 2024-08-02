@@ -54,10 +54,16 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-config-yaml</artifactId>
     </dependency>
-    <!-- Reactive postgres client -->
+    <!-- Depending on your db you need driver 1 or 2 -->
+    <!-- 1 - reactive postgres client -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
+    </dependency>
+    <!-- 2 - reactive mysql client -->
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-mysql-client</artifactId>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
