@@ -1,4 +1,4 @@
-package com.udemy.broker.db.migration;
+package com.udemy.broker.db;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
